@@ -14,11 +14,15 @@ import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 
+/**
+ * 对左侧游戏界面的设置、操作监听
+ *
+ * @author 1
+ */
 public class BoardPanel extends JPanel {
     private int length = 200;
     private int grid;
-    private GameImpl dataSource;        //数据来源是旁边的ToolPanel
-    private BoardImpl board;
+    private final BoardImpl board;
     private RunThread thread;
     private static Gizmo curGizmo;
 
@@ -33,43 +37,47 @@ public class BoardPanel extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 length = getMinLength();
-                int x = (int) ((e.getX() - BoardConstant.X0) / grid);
-                int y = (int) ((e.getY() - BoardConstant.X0) / grid);
+                int x = (e.getX() - BoardConstant.X0) / grid;
+                int y = (e.getY() - BoardConstant.X0) / grid;
                 int sizeRate = board.getSizeRate();
-                board.setCurMode(board.getCurMode());
+                BoardImpl.setCurMode(BoardImpl.getCurMode());
                 curGizmo = board.getGizmo(x, y);
 
-                if (board.getCurMode() == Mode.Shape) {
-                    if (dataSource.getShape() == GizmoShape.Finger) {
-                        dataSource.clear();
+                if (BoardImpl.getCurMode() == Mode.Shape) {
+                    if (GameImpl.getShape() == GizmoShape.Finger) {
+                        GameImpl.clear();
                     }
-                    if (dataSource.getShape() == GizmoShape.Ball)
-                        sizeRate = 1;
-                    else if (dataSource.getShape() == GizmoShape.Paddle)
-                        sizeRate = 2;
-                    else if (dataSource.getShape() == GizmoShape.Track)
-                        sizeRate = 2;
-                    if (board.canAdd(x, y, sizeRate, dataSource.getShape())) {
-                        if (dataSource.getShape() == GizmoShape.Track) {
-                            Gizmo tmp = new Gizmo(x, y, sizeRate, dataSource.getShape(), dataSource.getImg());
-                            Gizmo tmp1 = new Gizmo(x - 1, y, sizeRate, dataSource.getShape(), dataSource.getImg());
+                    switch (GameImpl.getShape()) {
+                        case Ball:
+                            sizeRate = 1;
+                            break;
+                        case Paddle:
+                        case Track:
+                            sizeRate = 2;
+                            break;
+                        default:
+                            break;
+                    }
+                    if (board.canAdd(x, y, sizeRate, GameImpl.getShape())) {
+                        Gizmo tmp = new Gizmo(x, y, sizeRate, GameImpl.getShape(), GameImpl.getImg());
+                        if (GameImpl.getShape() == GizmoShape.Track) {
+                            Gizmo tmp1 = new Gizmo(x - 1, y, sizeRate, GameImpl.getShape(), GameImpl.getImg());
                             board.addComponents(tmp);
                             board.addComponents(tmp1);
                         } else {
-                            Gizmo tmp = new Gizmo(x, y, sizeRate, dataSource.getShape(), dataSource.getImg());
                             board.addComponents(tmp);
                         }
                     }
-                } else if (board.getCurMode() == Mode.Tool) {
-                    if (dataSource.getTool() == Tools.Remove) {
+                } else if (BoardImpl.getCurMode() == Mode.Tool) {
+                    if (GameImpl.getTool() == Tools.Remove) {
                         board.removeGizmo(curGizmo);
-                    } else if (dataSource.getTool() == Tools.Rotation) {
+                    } else if (GameImpl.getTool() == Tools.Rotation) {
                         if (board.canRotate(x, y, curGizmo.getSizeRate(), curGizmo)) {
                             board.rotateGizmo(curGizmo);
                         }
-                    } else if (dataSource.getTool() == Tools.Plus) {
+                    } else if (GameImpl.getTool() == Tools.Plus) {
                         board.addGizmo(curGizmo);
-                    } else if (dataSource.getTool() == Tools.Minus) {
+                    } else if (GameImpl.getTool() == Tools.Minus) {
                         board.minusGizmo(curGizmo);
                     }
                 }
@@ -82,8 +90,9 @@ public class BoardPanel extends JPanel {
             @Override
             public void keyPressed(KeyEvent e) {
                 int code = e.getKeyCode();
-                if (board.isBuildMode())
+                if (BoardImpl.isBuildMode()) {
                     return;
+                }
 
                 if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN) {
                     int dx = 0, dy = 0;
@@ -100,6 +109,8 @@ public class BoardPanel extends JPanel {
                         case KeyEvent.VK_DOWN:
                             dy = -5;
                             break;
+                        default:
+                            break;
                     }
                     board.keyMove(dx, dy);
                 }
@@ -109,13 +120,15 @@ public class BoardPanel extends JPanel {
         addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                if (board.getCanFocus())
+                if (board.getCanFocus()) {
                     requestFocus();
+                }
             }
         });
         repaint();
     }
 
+    @Override
     public void paint(Graphics g) {
         Image image = new BufferedImage(getWidth(), getHeight(), Image.SCALE_DEFAULT);
         image.getGraphics().drawRect(0, 0, getWidth(), getHeight());
@@ -142,24 +155,22 @@ public class BoardPanel extends JPanel {
         for (int i = 0; i <= BoardConstant.LINES; i++) {
             Line2D row = new Line2D.Double(BoardConstant.X0, BoardConstant.Y0 + grid * i, length, BoardConstant.Y0 + grid * i);
             Line2D col = new Line2D.Double(BoardConstant.X0 + grid * i, BoardConstant.Y0, BoardConstant.X0 + grid * i, length);
-            g2D.draw(row);     //绘画横线
-            g2D.draw(col);     //绘画纵线
+            //绘画横线
+            g2D.draw(row);
+            //绘画纵线
+            g2D.draw(col);
         }
     }
 
     public void build() {
-        if (board.isBuildMode()) {
+        if (BoardImpl.isBuildMode()) {
             thread.interrupt();
-            board.updateCompoments();
+            board.updateComponents();
         } else {
             thread = new RunThread();
             thread.start();
             this.requestFocus();
         }
-    }
-
-    public static Gizmo getCurGizmo() {
-        return curGizmo;
     }
 
     public BoardImpl getBoard() {
@@ -187,7 +198,7 @@ public class BoardPanel extends JPanel {
     class RunThread extends Thread {
         @Override
         public void run() {
-            while (!board.isBuildMode()) {
+            while (!BoardImpl.isBuildMode()) {
                 board.setStep();
                 updateScreen();
                 try {

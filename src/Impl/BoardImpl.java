@@ -1,8 +1,8 @@
 package Impl;
 
 import Config.BoardConstant;
-import Config.Mode;
 import Config.GizmoShape;
+import Config.Mode;
 import Front.ToolPanel;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -13,18 +13,31 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.RoundRectangle2D;
 import java.util.ArrayList;
 
+/**
+ * 左侧游戏界面的各类操作监听、更新
+ *
+ * @author 1
+ */
 public class BoardImpl {
-    private World world; //创建一个模拟世界World
-    // 这是jbox2d当中抽象出来的存在引力、坐标范围的一个模拟的世界
-    private static final Vec2 gravity = new Vec2(0, -10);//模拟世界的重力
-    private float timeStep = 1.0f / 60.0f;//模拟世界的频率
-    private static int velocityIterations = 6;//速度迭代器
-    private static int positionIterations = 2;//迭代次数
-    private static Body ground; // 地面
-    private static int rowNum = BoardConstant.LINES - 1; // 格子的行数
-    private int sizeRate = 1;//物理世界与屏幕环境缩放比列
-
-    private boolean canFocus = true; //光标是否在棋盘中
+    //创建一个模拟世界World
+    private World world;
+    // 这是JBox2d当中抽象出来的存在引力、坐标范围的一个模拟的世界
+    //模拟世界的重力
+    private static final Vec2 GRAVITY = new Vec2(0, -10);
+    //模拟世界的频率
+    private float timeStep = 1.0f / 60.0f;
+    //速度迭代器
+    private static final int VELOCITY_ITERATIONS = 6;
+    //迭代次数
+    private static final int positionIterations = 2;
+    // 地面
+    private static Body ground;
+    // 格子的行数
+    private static int rowNum = BoardConstant.LINES - 1;
+    //物理世界与屏幕环境缩放比列
+    private int sizeRate = 1;
+    //光标是否在棋盘中
+    private boolean canFocus = true;
     private final static int size = 5;
 
     public static Mode curMode;
@@ -35,15 +48,18 @@ public class BoardImpl {
     private int rowHeight = 10;
 
     private static float angularResistForce = 1f;
-    private static float linearResistForce = 1f;
+    private static final float linearResistForce = 1f;
 
     public void newWorld() {
-        world = new World(gravity);
+        world = new World(GRAVITY);
         Gizmo.setWorld(world);
         Gizmo.setRowNum(rowNum);
         for (int i = 0; i <= 1; i++) {
-            for (int j = 0; j <= 1; j++)
+            int j = 0;
+            while (j <= 1) {
                 Gizmo.addSingleBoarder(i, j);
+                j++;
+            }
         }
     }
 
@@ -92,8 +108,9 @@ public class BoardImpl {
                     py += rowHeight / 4.0f;
                 }
                 py = length - py;
-                if (gizmo.getShape() != GizmoShape.Ball )
+                if (gizmo.getShape() != GizmoShape.Ball) {
                     g2D.setTransform(getTransform(px + 0.5 * sizeRate * rowHeight, py + 0.5 * sizeRate * rowHeight, -gizmo.getBody().getAngle(), g2D.getTransform()));
+                }
             }
 
             sizeRate = gizmo.getSizeRate();
@@ -113,7 +130,7 @@ public class BoardImpl {
         }
     }
 
-    public void updateCompoments() {
+    public void updateComponents() {
         for (Gizmo gizmo : components) {
             gizmo.updateBody();
         }
@@ -128,7 +145,7 @@ public class BoardImpl {
     }
 
     public void setStep() {
-        world.step(timeStep, velocityIterations, positionIterations);
+        world.step(timeStep, VELOCITY_ITERATIONS, positionIterations);
     }
 
     private AffineTransform getTransform(double x, double y, double angle, AffineTransform transform) {
@@ -230,8 +247,9 @@ public class BoardImpl {
             int tempX = temp.getX();
             int tempY = temp.getY();
             int sizeRate = temp.getSizeRate();
-            if (x >= tempX && x < tempX + sizeRate && y >= tempY && y < tempY + sizeRate)
+            if (x >= tempX && x < tempX + sizeRate && y >= tempY && y < tempY + sizeRate) {
                 return temp;
+            }
         }
         return null;
     }
@@ -281,8 +299,8 @@ public class BoardImpl {
         return timeStep;
     }
 
-    public int getVelocityIterations() {
-        return velocityIterations;
+    public int getVELOCITY_ITERATIONS() {
+        return VELOCITY_ITERATIONS;
     }
 
     public int getPositionIterations() {
@@ -318,6 +336,7 @@ public class BoardImpl {
     }
 
     //文件系统的操作--新建、保存和加载
+
     public void newScene() {
         newWorld();
         components.clear();

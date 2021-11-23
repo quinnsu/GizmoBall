@@ -12,7 +12,7 @@ public class App {
 
     public static BoardPanel boardPanel = new BoardPanel(board);
     public static ComponentPanel componentPanel = new ComponentPanel();   //组件栏
-    public static ToolPanel toolPanel = new ToolPanel(board);       //工具栏
+    public static ToolPanel toolPanel = new ToolPanel();       //工具栏
     public static PatternPanel patternPanel = new PatternPanel(boardPanel);   //模式栏
 
     public static void main(String[] args) {

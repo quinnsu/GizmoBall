@@ -5,6 +5,11 @@ import Config.GizmoShape;
 import java.awt.*;
 import java.io.Serializable;
 
+/**
+ * 文件系统的辅助类
+ *
+ * @author 1
+ */
 public class FileGizmo implements Serializable {
     private int x;
     private int y;

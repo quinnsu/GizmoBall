@@ -9,6 +9,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+/**
+ * 实现左侧游戏界面的辅助类
+ *
+ * @author 1
+ */
 public class GameImpl {
     private static GizmoShape gizmoShape;
     private static Mode curMode;

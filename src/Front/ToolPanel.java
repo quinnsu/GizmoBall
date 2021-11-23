@@ -1,10 +1,9 @@
 package Front;
 
-import Impl.ToolButton;
 import Config.Mode;
 import Config.Tools;
-import Impl.BoardImpl;
 import Impl.GameImpl;
+import Impl.ToolButton;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -13,22 +12,26 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 对右侧工具栏的设置
+ *
+ * @author 1
+ */
 public class ToolPanel extends JPanel {
-    private ToolButton btnRotate = readImg("pic/rotate.png", Tools.Rotation);
-    private ToolButton btnRemove = readImg("pic/delete.png", Tools.Remove);
-    private ToolButton btnPlus = readImg("pic/plus.png", Tools.Plus);
-    private ToolButton btnMinus = readImg("pic/minus.png", Tools.Minus);
 
-    List<ToolButton> compoments;
-    private GameImpl tool = new GameImpl();
-    private ButtonGroup btnGroup = new ButtonGroup();
+    List<ToolButton> components;
 
-    public ToolPanel(BoardImpl board) {
+    public ToolPanel() {
         super.setBorder(new TitledBorder(new EtchedBorder(), "工具栏"));
 
+        ToolButton btnRotate = readImg("pic/rotate.png", Tools.Rotation);
+        ButtonGroup btnGroup = new ButtonGroup();
         btnGroup.add(btnRotate);
+        ToolButton btnRemove = readImg("pic/delete.png", Tools.Remove);
         btnGroup.add(btnRemove);
+        ToolButton btnMinus = readImg("pic/minus.png", Tools.Minus);
         btnGroup.add(btnMinus);
+        ToolButton btnPlus = readImg("pic/plus.png", Tools.Plus);
         btnGroup.add(btnPlus);
 
         super.add(btnRotate);
@@ -36,13 +39,14 @@ public class ToolPanel extends JPanel {
         super.add(btnMinus);
         super.add(btnPlus);
 
-        compoments = new ArrayList<ToolButton>();
-        compoments.add(btnRotate);
-        compoments.add(btnRemove);
-        compoments.add(btnMinus);
-        compoments.add(btnPlus);
+        components = new ArrayList<>();
+        components.add(btnRotate);
+        components.add(btnRemove);
+        components.add(btnMinus);
+        components.add(btnPlus);
 
-        tool.addButtonActionListener(compoments, Mode.Tool);
+        GameImpl tool = new GameImpl();
+        tool.addButtonActionListener(components, Mode.Tool);
 
     }
 

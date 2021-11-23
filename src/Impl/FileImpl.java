@@ -5,10 +5,18 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 实现文件存储、新建、读取
+ *
+ * @author 1
+ */
 public class FileImpl {
-    public static void save(List<Gizmo> components, String path){
+    /**
+     * 保存文件
+     */
+    public static void save(List<Gizmo> components, String path) {
         List<FileGizmo> list = new ArrayList();
-        for (Gizmo g : components){
+        for (Gizmo g : components) {
             FileGizmo fg = new FileGizmo();
             fg.setAngle(g.getAngle());
             fg.setShape(g.getShape());
@@ -20,18 +28,21 @@ public class FileImpl {
         writeObjectToFile(list, path);
     }
 
+    /**
+     * 读取文件
+     */
     public static List<Gizmo> load(String path) {
         List<FileGizmo> list = (List<FileGizmo>) readObjectFromFile(path);
         List<Gizmo> components = new ArrayList<>();
-        ImageIcon pinball=new ImageIcon("pic/pinball.png");
-        ImageIcon circle=new ImageIcon("pic/ball.png");
-        ImageIcon absorber=new ImageIcon("pic/absorber.png");
-        ImageIcon square =new ImageIcon("pic/square.png");
-        ImageIcon triangle=new ImageIcon("pic/triangle.png");
-        ImageIcon track=new ImageIcon("pic/track.png");
-        ImageIcon paddle=new ImageIcon("pic/paddle.png");
+        ImageIcon pinball = new ImageIcon("pic/pinball.png");
+        ImageIcon circle = new ImageIcon("pic/ball.png");
+        ImageIcon absorber = new ImageIcon("pic/absorber.png");
+        ImageIcon square = new ImageIcon("pic/square.png");
+        ImageIcon triangle = new ImageIcon("pic/triangle.png");
+        ImageIcon track = new ImageIcon("pic/track.png");
+        ImageIcon paddle = new ImageIcon("pic/paddle.png");
         for (FileGizmo g : list) {
-            switch (g.getShape()){
+            switch (g.getShape()) {
                 case Paddle:
                     g.setImg(paddle.getImage());
                     break;
@@ -53,6 +64,8 @@ public class FileImpl {
                 case Ball:
                     g.setImg(pinball.getImage());
                     break;
+                default:
+                    break;
             }
             Gizmo gizmo = new Gizmo(g.getX(), g.getY(), g.getSizeRate(), g.getShape(), g.getImg());
             if (g.getAngle() != 0) {
@@ -64,6 +77,9 @@ public class FileImpl {
         return components;
     }
 
+    /**
+     * 依次读取文件中的设置和组件
+     */
     public static Object readObjectFromFile(String path) {
         Object temp = null;
         File file = new File(path);
@@ -83,6 +99,9 @@ public class FileImpl {
         return temp;
     }
 
+    /**
+     * 依次把布局的设置和组件写入
+     */
     public static void writeObjectToFile(Object obj, String path) {
         File file = new File(path);
         FileOutputStream out;

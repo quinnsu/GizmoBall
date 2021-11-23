@@ -12,18 +12,21 @@ import org.jbox2d.dynamics.contacts.Contact;
 
 import java.awt.*;
 
+/**
+ * 添加组件的辅助类
+ *
+ * @author 1
+ */
 public class Gizmo {
     private static World world;
-    private static BoardImpl board = new BoardImpl();
+    private static final BoardImpl board = new BoardImpl();
     private int x;
     private int y;
-    private static Body ground;
-    private static BodyType move = BodyType.DYNAMIC;
     private static int rowNum;
 
     private Body body;
-    private GizmoShape gizmoShape;
-    private int sizeRate = 1;
+    private final GizmoShape gizmoShape;
+    private int sizeRate;
     private final static int size = 5;
     private double angle = 0 * Math.PI / 180; //旋转角度
     private Image img;
@@ -108,16 +111,10 @@ public class Gizmo {
             case Track:
                 addTrack(x, y);
                 break;
-
+            default:
+                break;
         }
         body.setUserData(gizmoShape);
-    }
-
-    public static void setMove(boolean f) {
-        if (f)
-            move = BodyType.DYNAMIC;
-        else
-            move = BodyType.STATIC;
     }
 
     public void updateBody() {
@@ -211,8 +208,6 @@ public class Gizmo {
         fixtureDef.shape = box;
         fixtureDef.restitution = 1;
         body.createFixture(fixtureDef);
-        if (x == 0 && y == 0)
-            ground = body;
     }
 
     //长方体 黑洞
@@ -221,8 +216,8 @@ public class Gizmo {
         BodyDef def = new BodyDef();
         def.type = BodyType.STATIC;
         def.gravityScale = 0;
-        def.angularDamping = board.getAngularResistForce();
-        def.linearDamping = board.getLinearResistForce();
+        def.angularDamping = BoardImpl.getAngularResistForce();
+        def.linearDamping = BoardImpl.getLinearResistForce();
         int a = sizeRate * size;
         def.position.set(x * size + a / 2.0f, y * size - a / 2.0f);
         def.userData = img;
@@ -233,8 +228,9 @@ public class Gizmo {
         fixtureDef.shape = box;
         fixtureDef.density = 50;
         fixtureDef.restitution = 1;//补偿系数[0..1] 为0时不会回弹
-        if (gizmoShape == GizmoShape.Absorber)
+        if (gizmoShape == GizmoShape.Absorber) {
             fixtureDef.restitution = 0;//黑洞补偿系数为0
+        }
         body.createFixture(fixtureDef);
     }
 
@@ -244,8 +240,8 @@ public class Gizmo {
         BodyDef def = new BodyDef();
         def.type = BodyType.STATIC;
         def.gravityScale = 0;
-        def.angularDamping = board.getAngularResistForce();
-        def.linearDamping = board.getLinearResistForce();
+        def.angularDamping = BoardImpl.getAngularResistForce();
+        def.linearDamping = BoardImpl.getLinearResistForce();
         int r = sizeRate * size;
         def.position.set(x * size + r / 2.0f, y * size - r / 2.0f);
         body = world.createBody(def);
@@ -264,8 +260,8 @@ public class Gizmo {
         BodyDef def = new BodyDef();
         def.type = BodyType.STATIC;
         def.gravityScale = 0;
-        def.angularDamping = board.getAngularResistForce();
-        def.linearDamping = board.getLinearResistForce();
+        def.angularDamping = BoardImpl.getAngularResistForce();
+        def.linearDamping = BoardImpl.getLinearResistForce();
         int a = sizeRate * size;
         def.position.set(x * size + a / 2.0f, y * size - a / 2.0f);
         def.angle = (float) -angle;
@@ -280,6 +276,7 @@ public class Gizmo {
         body.createFixture(fixtureDef);
     }
 
+    // 挡板
     public void addPaddle(int x, int y, int sizeRate) {
         y = 20 - y;
         BodyDef def = new BodyDef();
@@ -296,6 +293,7 @@ public class Gizmo {
 
     }
 
+    // 直轨道
     public void addTrack(int x, int y) {
         y = 20 - y;
         BodyDef def = new BodyDef();

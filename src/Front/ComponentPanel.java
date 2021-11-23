@@ -1,5 +1,10 @@
 package Front;
 
+import Config.GizmoShape;
+import Config.Mode;
+import Impl.GameImpl;
+import Impl.ToolButton;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -7,42 +12,38 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import Impl.ToolButton;
-
-import Config.Mode;
-import Config.GizmoShape;
-import Impl.GameImpl;
-
+/**
+ * 对右侧组件栏的设置
+ *
+ * @author 1
+ */
 public class ComponentPanel extends JPanel {
-
-    private ToolButton btnFinger = readImg("pic/finger.png", GizmoShape.Finger);
-    private ToolButton btnBall = readImg("pic/pinball.png", GizmoShape.Ball);
-    private ToolButton btnCircle = readImg("pic/ball.png", GizmoShape.Circle);
-    private ToolButton btnAbsorber = readImg("pic/absorber.png", GizmoShape.Absorber);
-    private ToolButton btnSquare = readImg("pic/square.png", GizmoShape.Square);
-    private ToolButton btnTriangle = readImg("pic/triangle.png", GizmoShape.Triangle);
-    private ToolButton btnTrack = readImg("pic/track.png", GizmoShape.Track);
-    private ToolButton btnPaddle = readImg("pic/paddle.png", GizmoShape.Paddle);
-
-    private ButtonGroup btnGroup = new ButtonGroup();
-    List<ToolButton> compoments;
-    private GameImpl tool = new GameImpl();
+    List<ToolButton> components;
 
     public ComponentPanel() {
         super.setBorder(new TitledBorder(new EtchedBorder(), "组件栏"));
 
+        ToolButton btnFinger = readImg("pic/finger.png", GizmoShape.Finger);
+        ButtonGroup btnGroup = new ButtonGroup();
         btnGroup.add(btnFinger);
+        ToolButton btnBall = readImg("pic/pinball.png", GizmoShape.Ball);
         btnGroup.add(btnBall);
+        ToolButton btnCircle = readImg("pic/ball.png", GizmoShape.Circle);
         btnGroup.add(btnCircle);
+        ToolButton btnAbsorber = readImg("pic/absorber.png", GizmoShape.Absorber);
         btnGroup.add(btnAbsorber);
+        ToolButton btnSquare = readImg("pic/square.png", GizmoShape.Square);
         btnGroup.add(btnSquare);
+        ToolButton btnTriangle = readImg("pic/triangle.png", GizmoShape.Triangle);
         btnGroup.add(btnTriangle);
+        ToolButton btnTrack = readImg("pic/track.png", GizmoShape.Track);
         btnGroup.add(btnTrack);
+        ToolButton btnPaddle = readImg("pic/paddle.png", GizmoShape.Paddle);
         btnGroup.add(btnPaddle);
-
-        btnFinger.setSelected(true);    //将finger设为初始默认选项
-
-        super.add(btnFinger);       //显示在面板组件上
+        //将finger设为初始默认选项
+        btnFinger.setSelected(true);
+        //显示在面板组件上
+        super.add(btnFinger);
         super.add(btnBall);
         super.add(btnCircle);
         super.add(btnAbsorber);
@@ -52,17 +53,18 @@ public class ComponentPanel extends JPanel {
         super.add(btnPaddle);
 
         //将button组成一个队列，方便重载button类的属性
-        compoments = new ArrayList();
-        compoments.add(btnFinger);
-        compoments.add(btnBall);
-        compoments.add(btnCircle);
-        compoments.add(btnAbsorber);
-        compoments.add(btnSquare);
-        compoments.add(btnTriangle);
-        compoments.add(btnTrack);
-        compoments.add(btnPaddle);
+        components = new ArrayList();
+        components.add(btnFinger);
+        components.add(btnBall);
+        components.add(btnCircle);
+        components.add(btnAbsorber);
+        components.add(btnSquare);
+        components.add(btnTriangle);
+        components.add(btnTrack);
+        components.add(btnPaddle);
 
-        tool.addButtonActionListener(compoments, Mode.Shape);
+        GameImpl tool = new GameImpl();
+        tool.addButtonActionListener(components, Mode.Shape);
 
     }
 

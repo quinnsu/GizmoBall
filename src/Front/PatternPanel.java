@@ -10,13 +10,16 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * 对右侧模式栏的设置
+ *
+ * @author 1
+ */
 public class PatternPanel extends JPanel {
-
-    private JButton btnOperation = new JButton("布局模式");
-    private JButton btnPlay = new JButton("游玩模式");
 
     public PatternPanel(BoardPanel boardPanel) {
         super.setBorder(new TitledBorder(new EtchedBorder(), "模式栏"));
+        JButton btnOperation = new JButton("布局模式");
         btnOperation.setBounds(30, 30, 140, 30);
         btnOperation.setFont(new Font("等线light", Font.BOLD, 20));
         btnOperation.addMouseListener(new MouseAdapter() {
@@ -27,6 +30,7 @@ public class PatternPanel extends JPanel {
             }
         });
 
+        JButton btnPlay = new JButton("游玩模式");
         btnPlay.setBounds(30, 75, 140, 30);
         btnPlay.setFont(new Font("等线light", Font.BOLD, 20));
         btnPlay.addMouseListener(new MouseAdapter() {
