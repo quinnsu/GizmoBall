@@ -5,5 +5,5 @@ package Config;
  */
 public enum GizmoShape {
     Absorber, Circle, Ball, Paddle,
-    Track, Triangle, Square, Finger
+    Track, Curve, Triangle, Square, Finger
 }
