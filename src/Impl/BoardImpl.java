@@ -79,7 +79,7 @@ public class BoardImpl {
                     if (gizmo.getShape() == GizmoShape.Paddle) {
                         px -= gizmo.getSizeRate() * rowHeight / 2.0f;
                         py += 0.875f * rowHeight;
-                    } else if (gizmo.getShape() == GizmoShape.Track) {
+                    } else if (gizmo.getShape() == GizmoShape.Track || gizmo.getShape() == GizmoShape.Curve) {
                         px -= 0.875 * rowHeight;
                         py += rowHeight;
                     } else {
@@ -100,13 +100,18 @@ public class BoardImpl {
 
             if (gizmo.getShape() == GizmoShape.Ball) {
                 g2D.drawImage(curImg, (int) px, (int) py, rowHeight / 2, rowHeight / 2, null);
-            } else if (gizmo.getShape() == GizmoShape.Track) {
-
+            }
+            else if (gizmo.getShape() == GizmoShape.Track) {
                 g2D.setColor(new Color(138, 204, 241));
                 g2D.fill(paintPaddle(px, py, sizeRate));
-            } else if (gizmo.getShape() == GizmoShape.Paddle) {
+            }
+            else if (gizmo.getShape() == GizmoShape.Curve){
+                g2D.drawImage(curImg, (int) px, (int) py, rowHeight, rowHeight, null);
+            }
+            else if (gizmo.getShape() == GizmoShape.Paddle) {
                 g2D.drawImage(curImg, (int) px, (int) py, sizeRate * rowHeight, sizeRate * rowHeight, null);
-            } else {
+            }
+            else {
                 g2D.drawImage(curImg, (int) px, (int) py, sizeRate * rowHeight, sizeRate * rowHeight, null);
             }
             g2D.setTransform(transform);

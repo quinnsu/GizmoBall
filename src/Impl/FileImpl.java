@@ -29,7 +29,9 @@ public class FileImpl {
         ImageIcon square =new ImageIcon("pic/square.png");
         ImageIcon triangle=new ImageIcon("pic/triangle.png");
         ImageIcon track=new ImageIcon("pic/track.png");
+        ImageIcon curve=new ImageIcon("pic/curve.png");
         ImageIcon paddle=new ImageIcon("pic/paddle.png");
+
         for (FileGizmo g : list) {
             switch (g.getShape()){
                 case Paddle:
@@ -52,6 +54,9 @@ public class FileImpl {
                     break;
                 case Ball:
                     g.setImg(pinball.getImage());
+                    break;
+                case Curve:
+                    g.setImg(curve.getImage());
                     break;
             }
             Gizmo gizmo = new Gizmo(g.getX(), g.getY(), g.getSizeRate(), g.getShape(), g.getImg());

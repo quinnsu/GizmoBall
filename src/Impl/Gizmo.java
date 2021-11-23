@@ -4,6 +4,7 @@ import Config.GizmoShape;
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
+import org.jbox2d.collision.shapes.ChainShape;
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -11,6 +12,7 @@ import org.jbox2d.dynamics.*;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Gizmo {
     private static World world;
@@ -108,7 +110,9 @@ public class Gizmo {
             case Track:
                 addTrack(x, y);
                 break;
-
+            case Curve:
+                addCurve(x, y);
+                break;
         }
         body.setUserData(gizmoShape);
     }
@@ -293,7 +297,6 @@ public class Gizmo {
         fixtureDef.shape = shape;
         fixtureDef.restitution = 1.5f;
         body.createFixture(fixtureDef);
-
     }
 
     public void addTrack(int x, int y) {
@@ -306,6 +309,34 @@ public class Gizmo {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(0.125f * size, size);
         body.createFixture(shape, 1);
+    }
+
+    public void addCurve(int x, int y) {
+        y = 20 - y;
+        BodyDef def = new BodyDef();
+        def.type = BodyType.STATIC;
+        def.position.set(x * size + 0.875f * size, y * size - size);
+        body = world.createBody(def);
+        ChainShape shape = new ChainShape();
+
+        ArrayList<Vec2> groundVertices = new ArrayList<>();
+
+        for (int i = 0; i < size; ++i) {
+            Vec2 segment = new Vec2((float) x - 3.5f * size, i);
+            groundVertices.add(segment);
+        }
+        for (int i = 0; i < size; ++i) {
+            Vec2 segment = new Vec2((float) i, y - 3.5f * size);
+            groundVertices.add(segment);
+        }
+
+        Vec2[] spec = {};
+        shape.createChain(groundVertices.toArray(spec), groundVertices.size());
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.restitution = 1.5f;
+        body.createFixture(fixtureDef);
     }
 
     public void applyForce() {

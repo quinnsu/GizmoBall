@@ -22,7 +22,9 @@ public class ComponentPanel extends JPanel {
     private ToolButton btnSquare = readImg("pic/square.png", GizmoShape.Square);
     private ToolButton btnTriangle = readImg("pic/triangle.png", GizmoShape.Triangle);
     private ToolButton btnTrack = readImg("pic/track.png", GizmoShape.Track);
+    private ToolButton btnTrack2 = readImg("pic/curve.png", GizmoShape.Curve);
     private ToolButton btnPaddle = readImg("pic/paddle.png", GizmoShape.Paddle);
+    private ToolButton btnPaddle2 = readImg("pic/paddle.png", GizmoShape.Paddle);
 
     private ButtonGroup btnGroup = new ButtonGroup();
     List<ToolButton> compoments;
@@ -38,7 +40,9 @@ public class ComponentPanel extends JPanel {
         btnGroup.add(btnSquare);
         btnGroup.add(btnTriangle);
         btnGroup.add(btnTrack);
+        btnGroup.add(btnTrack2);
         btnGroup.add(btnPaddle);
+        btnGroup.add(btnPaddle2);
 
         btnFinger.setSelected(true);    //将finger设为初始默认选项
 
@@ -49,7 +53,9 @@ public class ComponentPanel extends JPanel {
         super.add(btnSquare);
         super.add(btnTriangle);
         super.add(btnTrack);
+        super.add(btnTrack2);
         super.add(btnPaddle);
+        super.add(btnPaddle2);
 
         //将button组成一个队列，方便重载button类的属性
         compoments = new ArrayList();
@@ -60,7 +66,9 @@ public class ComponentPanel extends JPanel {
         compoments.add(btnSquare);
         compoments.add(btnTriangle);
         compoments.add(btnTrack);
+        compoments.add(btnTrack2);
         compoments.add(btnPaddle);
+        compoments.add(btnPaddle2);
 
         tool.addButtonActionListener(compoments, Mode.Shape);
 
@@ -68,7 +76,7 @@ public class ComponentPanel extends JPanel {
 
     private ToolButton readImg(String imgPath, GizmoShape gizmoShape) {
         ImageIcon img = new ImageIcon(imgPath);
-        img.setImage(img.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        img.setImage(img.getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
         ToolButton btn = new ToolButton(img, gizmoShape);
         btn.setImg(img.getImage());
         btn.setEnabled(true);
